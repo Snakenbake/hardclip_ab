@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HarClip AB</title>
+  <title>HardClip AB</title>
   <meta name="description" content="HardClip AB – konsulttjänster inom IT, systemutveckling och digitala lösningar." />
 
   <style>
@@ -23,8 +23,15 @@
       border-radius: 8px;
       box-shadow: 0 6px 20px rgba(0,0,0,0.06);
     }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
     h1 {
-      margin-top: 0;
+      margin: 0;
       font-size: 2rem;
     }
     h2 {
@@ -43,38 +50,71 @@
     a:hover {
       text-decoration: underline;
     }
+
+    /* Language toggle */
+    .lang-toggle {
+      display: inline-flex;
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 999px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .lang-toggle button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      padding: 0.35rem 0.7rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #333;
+    }
+    .lang-toggle button[aria-pressed="true"] {
+      background: rgba(0,0,0,0.06);
+    }
+    .muted {
+      color: #666;
+    }
   </style>
 </head>
 
 <body>
   <main>
-    <h1>Bolagsnamn AB</h1>
+    <header>
+      <h1>HardClip AB</h1>
 
-    <p>
-      HardClip AB erbjuder konsulttjänster inom IT, systemutveckling och digitala lösningar. 
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button id="btn-sv" type="button" aria-pressed="true">SV</button>
+        <button id="btn-en" type="button" aria-pressed="false">EN</button>
+      </div>
+    </header>
+
+    <p data-i18n="intro">
+      HardClip AB erbjuder konsulttjänster inom IT, systemutveckling och digitala lösningar.
       Fokus ligger på robusta, pragmatiska lösningar anpassade efter verksamhetens faktiska behov.
     </p>
 
-    <h2>Tjänste-områden</h2>
+    <h2 data-i18n="areas_title">Tjänste-områden</h2>
     <ul>
-      <li>ABAP & SAP Fiori</li>
-      <li>Anpassade web-lösningar</li>
-      <li>PowerBI</li>
-      <li>Astro WMS</li>
-      <li>Teknisk rådgivning</li>
+      <li data-i18n="area_1">ABAP &amp; SAP Fiori</li>
+      <li data-i18n="area_2">Anpassade web-lösningar</li>
+      <li data-i18n="area_3">Power BI</li>
+      <li data-i18n="area_4">Astro WMS</li>
+      <li data-i18n="area_5">Teknisk rådgivning</li>
     </ul>
 
-    <h2>Certifieringar</h2>
+    <h2 data-i18n="certs_title">Certifieringar</h2>
     <ul>
       <li>SAP Certified Associate - SAP Fiori Application Developer</li>
       <li>SAP Certified Associate - Back-End Developer - ABAP Cloud</li>
-      <li>Microsoft Certified: Data Analyst Associate</li>      
+      <li>Microsoft Certified: Data Analyst Associate</li>
     </ul>
 
-    <h2>Kontakt</h2>
+    <h2 data-i18n="contact_title">Kontakt</h2>
     <p>
-      För förfrågningar:<br />
-      <strong>E-post:</strong> info [at] asd harclip.se<br />
+      <span data-i18n="contact_lead">För förfrågningar:</span><br />
+      <strong data-i18n="email_label">E-post:</strong>
+      <span class="muted">info [at] hardclip.se</span><br />
       <strong>LinkedIn:</strong>
       <a href="https://www.linkedin.com/in/dittnamn" target="_blank" rel="noopener">
         linkedin.com/in/dittnamn
@@ -84,9 +124,88 @@
     <footer>
       <p>
         HardClip AB<br />
-        Organisationsnummer: 559560-3076
+        <span data-i18n="orgno_label">Organisationsnummer:</span> 559560-3076
       </p>
     </footer>
   </main>
+
+  <script>
+    // Simple SV/EN i18n without any dependencies.
+    const translations = {
+      sv: {
+        intro:
+          "HardClip AB erbjuder konsulttjänster inom IT, systemutveckling och digitala lösningar. " +
+          "Fokus ligger på robusta, pragmatiska lösningar anpassade efter verksamhetens faktiska behov.",
+        areas_title: "Tjänste-områden",
+        area_1: "ABAP & SAP Fiori",
+        area_2: "Anpassade web-lösningar",
+        area_3: "Power BI",
+        area_4: "Astro WMS",
+        area_5: "Teknisk rådgivning",
+        certs_title: "Certifieringar",
+        contact_title: "Kontakt",
+        contact_lead: "För förfrågningar:",
+        email_label: "E-post:",
+        orgno_label: "Organisationsnummer:"
+      },
+      en: {
+        intro:
+          "HardClip AB provides consulting services in IT, software development, and digital solutions. " +
+          "The focus is on robust, pragmatic solutions tailored to real business needs.",
+        areas_title: "Services",
+        area_1: "ABAP & SAP Fiori",
+        area_2: "Custom web solutions",
+        area_3: "Power BI",
+        area_4: "Astro WMS",
+        area_5: "Technical advisory",
+        certs_title: "Certifications",
+        contact_title: "Contact",
+        contact_lead: "For inquiries:",
+        email_label: "Email:",
+        orgno_label: "Company registration no.:"
+      }
+    };
+
+    function setPressed(lang) {
+      document.getElementById("btn-sv").setAttribute("aria-pressed", lang === "sv");
+      document.getElementById("btn-en").setAttribute("aria-pressed", lang === "en");
+    }
+
+    function applyLanguage(lang) {
+      const dict = translations[lang] || translations.sv;
+
+      // Set html lang attribute
+      document.documentElement.lang = lang;
+
+      // Update visible strings
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) el.textContent = dict[key];
+      });
+
+      // Optional: update meta description for better SEO
+      const meta = document.querySelector('meta[name="description"]');
+      if (meta) {
+        meta.setAttribute(
+          "content",
+          lang === "en"
+            ? "HardClip AB – consulting services in IT, software development, and digital solutions."
+            : "HardClip AB – konsulttjänster inom IT, systemutveckling och digitala lösningar."
+        );
+      }
+
+      setPressed(lang);
+      try { localStorage.setItem("lang", lang); } catch (e) {}
+    }
+
+    // Wire up buttons
+    document.getElementById("btn-sv").addEventListener("click", () => applyLanguage("sv"));
+    document.getElementById("btn-en").addEventListener("click", () => applyLanguage("en"));
+
+    // Init
+    const saved = (() => { try { return localStorage.getItem("lang"); } catch (e) { return null; } })();
+    const initial = saved || "sv";
+    applyLanguage(initial);
+  </script>
 </body>
 </html>
